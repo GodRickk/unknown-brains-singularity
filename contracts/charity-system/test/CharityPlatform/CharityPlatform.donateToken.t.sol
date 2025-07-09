@@ -19,7 +19,7 @@ contract DonateToken is SetUpCharityPlatform {
     }
 
     function test_donateToken() public {
-        prepareToDonate(notOwner, ARBITRUM_USDT, tokenDonateAmount);
+        prepareToDonateToken(notOwner, ARBITRUM_USDT, tokenDonateAmount);
 
         vm.prank(notOwner);
         charityPlatform.donateToken(organizationName, ARBITRUM_USDT, tokenDonateAmount);
@@ -46,17 +46,17 @@ contract DonateToken is SetUpCharityPlatform {
     }
 
     function test_RevertWhen_OrganizationIsNotDefined() public {
-        prepareToDonate(notOwner, ARBITRUM_USDT, tokenDonateAmount);
+        prepareToDonateToken(notOwner, ARBITRUM_USDT, tokenDonateAmount);
 
         vm.expectRevert(
-            abi.encodeWithSelector(ICharityPlatform.CharityOrganizationIsNotDefined.selector, "Not defined name")
+            abi.encodeWithSelector(ICharityPlatform.CharityOrganizationIsNotDefined.selector, notDefinedName)
         );
         vm.prank(notOwner);
-        charityPlatform.donateToken("Not defined name", ARBITRUM_USDT, tokenDonateAmount);
+        charityPlatform.donateToken(notDefinedName, ARBITRUM_USDT, tokenDonateAmount);
     }
 
     function test_RevertWhen_ZeroTokenAddress() public {
-        prepareToDonate(notOwner, ARBITRUM_USDT, tokenDonateAmount);
+        prepareToDonateToken(notOwner, ARBITRUM_USDT, tokenDonateAmount);
 
         vm.expectRevert(abi.encodeWithSelector(ICharityPlatform.ZeroAddress.selector));
         vm.prank(notOwner);
@@ -64,14 +64,14 @@ contract DonateToken is SetUpCharityPlatform {
     }
 
     function test_RevertWhen_ZeroTokenAmount() public {
-        prepareToDonate(notOwner, ARBITRUM_USDT, tokenDonateAmount);
+        prepareToDonateToken(notOwner, ARBITRUM_USDT, tokenDonateAmount);
 
         vm.expectRevert(abi.encodeWithSelector(ICharityPlatform.ZeroAmount.selector));
         vm.prank(notOwner);
         charityPlatform.donateToken(organizationName, ARBITRUM_USDT, 0);
     }
 
-    function prepareToDonate(address caller, address tokenAddress, uint256 tokenAmount) internal {
+    function prepareToDonateToken(address caller, address tokenAddress, uint256 tokenAmount) internal {
         deal(tokenAddress, caller, tokenAmount);
 
         vm.prank(caller);

@@ -17,6 +17,7 @@ contract SetUpCharityPlatform is Test, Fork {
 
     address charityReceiver = makeAddr("charityReceiver");
     string organizationName = "Some Name";
+    string notDefinedName = "Not defined";
 
     address charityDonor = makeAddr("charityDonor");
 
