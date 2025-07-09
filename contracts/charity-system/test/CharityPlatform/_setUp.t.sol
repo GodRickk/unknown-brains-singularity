@@ -21,11 +21,13 @@ contract SetUpCharityPlatform is Test, Fork {
 
     address charityDonor = makeAddr("charityDonor");
 
+    address feeReceiver = makeAddr("feeReceiver");
+
     address ARBITRUM_USDT = 0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9;
 
     function setUp() public virtual {
         uint256 forkId = vm.createSelectFork(vm.envString("ARBITRUM_MAINNET_RPC_URL"));
-        charityPlatform = new CharityPlatform(owner);
+        charityPlatform = new CharityPlatform(owner, feeReceiver);
 
         vm.prank(owner);
         charityPlatform.registerOrganization(organizationName, charityReceiver);

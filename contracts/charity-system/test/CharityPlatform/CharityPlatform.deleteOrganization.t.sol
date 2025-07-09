@@ -8,6 +8,9 @@ import {Ownable} from "@openzeppelin/access/Ownable.sol";
 
 import {CharityPlatform} from "../../src/CharityPlatform.sol";
 import {ICharityPlatform} from "../../src/interfaces/ICharityPlatform.sol";
+
+import {IErrors} from "../../src/interfaces/IErrors.sol";
+
 import {SetUpCharityPlatform} from "./_setUp.t.sol";
 
 contract DonateETH is SetUpCharityPlatform {
@@ -30,9 +33,7 @@ contract DonateETH is SetUpCharityPlatform {
     }
 
     function test_RevertWhen_IsNotDefined() public {
-        vm.expectRevert(
-            abi.encodeWithSelector(ICharityPlatform.CharityOrganizationIsNotDefined.selector, notDefinedName)
-        );
+        vm.expectRevert(abi.encodeWithSelector(IErrors.CharityOrganizationIsNotDefined.selector, notDefinedName));
 
         vm.prank(owner);
         charityPlatform.deleteOrganization(notDefinedName);
