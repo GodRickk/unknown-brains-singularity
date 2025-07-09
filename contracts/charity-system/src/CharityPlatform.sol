@@ -7,17 +7,18 @@ import {Ownable} from "@openzeppelin/access/Ownable.sol";
 /* ====== INTERFACES IMPORTS ====== */
 import {IERC20} from "@openzeppelin/token/ERC20/IERC20.sol";
 import {ICharityPlatform} from "./interfaces/ICharityPlatform.sol";
+import {FeeManager} from "./FeeManager.sol";
 
 /* ====== CONTRACTS IMPORTS ====== */
 
-contract CharityPlatform is Ownable, ICharityPlatform {
+contract CharityPlatform is ICharityPlatform, FeeManager {
     /* ======== STATE ======== */
 
     mapping(string => address) public charities;
 
     /* ======== CONSTRUCTOR AND INIT ======== */
 
-    constructor(address admin) Ownable(admin) {}
+    constructor(address admin, address feeReceiver) FeeManager(admin, feeReceiver) {}
 
     /* ======== EXTERNAL/PUBLIC ======== */
 
@@ -33,10 +34,12 @@ contract CharityPlatform is Ownable, ICharityPlatform {
 
         IERC20 token = IERC20(addressToken);
 
-        bool success = token.transferFrom(msg.sender, charities[organizationName], amount);
+        uint256 amountWithPaidFee = _prepareToDonate(amount, addressToken, false);
+
+        bool success = token.transferFrom(msg.sender, charities[organizationName], amountWithPaidFee);
         require(success, "CharityPlatform: Transfer to charity failed");
 
-        emit DonationReceived(msg.sender, charities[organizationName], amount, addressToken);
+        emit DonationReceived(msg.sender, charities[organizationName], amountWithPaidFee, addressToken);
     }
 
     function donateETH(string calldata organizationName) external payable {
@@ -46,10 +49,12 @@ contract CharityPlatform is Ownable, ICharityPlatform {
 
         address payable charityWallet = payable(charities[organizationName]);
 
-        (bool sent,) = charityWallet.call{value: msg.value}("");
+        uint256 amountWithPaidFee = _prepareToDonate(msg.value, address(0), true);
+
+        (bool sent,) = charityWallet.call{value: amountWithPaidFee}("");
         require(sent, "CharityPlatform: ETH transfer failed");
 
-        emit DonationReceived(msg.sender, charityWallet, msg.value, address(0));
+        emit DonationReceived(msg.sender, charityWallet, amountWithPaidFee, address(0));
     }
 
     /* ======== INTERNAL ======== */
@@ -82,17 +87,5 @@ contract CharityPlatform is Ownable, ICharityPlatform {
         }
 
         return true;
-    }
-
-    function isZeroAddress(address addressCheck) public pure {
-        if (addressCheck == address(0)) {
-            revert ZeroAddress();
-        }
-    }
-
-    function isZeroAmount(uint256 amount) public pure {
-        if (amount == 0) {
-            revert ZeroAmount();
-        }
     }
 }
