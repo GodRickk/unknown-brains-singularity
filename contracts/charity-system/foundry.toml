@@ -23,16 +23,8 @@ fs_permissions = [
 
 [rpc_endpoints]
 # Name "ethereum" breaks foundry configuration!
-mainnet = "${ETHEREUM_RPC}"
-arbitrum = "${ARBITRUM_RPC}"
-polygon = "${POLYGON_RPC}"
-optimism = "${OPTIMISM_RPC}"
-base = "${BASE_RPC}"
-bsc = "${BSC_RPC}"
-avalanche = "${AVALANCHE_RPC}"
-mantle = "${MANTLE_RPC}"
-metis = "${METIS_RPC}"
-sei = "${SEI_RPC}"
+arbitrum = "${ARBITRUM_MAINNET_RPC_URL}"
+
 
 [etherscan]
 mainnet = { key = "${ETHEREUM_TOKEN}", chain = 1 }
