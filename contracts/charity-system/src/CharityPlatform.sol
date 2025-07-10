@@ -3,6 +3,7 @@ pragma solidity ^0.8.27;
 
 /* ====== EXTERNAL IMPORTS ====== */
 import {Ownable} from "@openzeppelin/access/Ownable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 /* ====== INTERFACES IMPORTS ====== */
 import {IERC20} from "@openzeppelin/token/ERC20/IERC20.sol";
@@ -11,7 +12,7 @@ import {FeeManager} from "./FeeManager.sol";
 
 /* ====== CONTRACTS IMPORTS ====== */
 
-contract CharityPlatform is ICharityPlatform, FeeManager {
+contract CharityPlatform is ICharityPlatform, FeeManager, ReentrancyGuard {
     /* ======== STATE ======== */
 
     mapping(string => address) public charities;
@@ -42,7 +43,7 @@ contract CharityPlatform is ICharityPlatform, FeeManager {
         emit DonationReceived(msg.sender, charities[organizationName], amountWithPaidFee, addressToken);
     }
 
-    function donateETH(string calldata organizationName) external payable {
+    function donateETH(string calldata organizationName) external payable nonReentrant {
         isOrganizationRegistered(organizationName);
 
         isZeroAmount(msg.value);

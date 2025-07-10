@@ -9,6 +9,8 @@ contract CharityPlatformDeploy is Script {
     uint256 privateKey = vm.envUint("PRIVATE_KEY");
     address owner = 0xB98BC23f1EdDb754d01DBc7B62B28039eC9A0cD9;
 
+    address feeReceiver = owner;
+
     function run() public {
         vm.createSelectFork(vm.envString("ARBITRUM_MAINNET_RPC_URL"));
         _deploy();
@@ -17,13 +19,11 @@ contract CharityPlatformDeploy is Script {
     function _deploy() internal {
         vm.startBroadcast(privateKey);
 
-        CharityPlatform charityPlatform = new CharityPlatform(owner);
+        CharityPlatform charityPlatform = new CharityPlatform(owner, feeReceiver);
 
         console.log("CharityPlatform deployed on address: ", address(charityPlatform));
-        // console.log("ProxyFee owner: ", proxyFee.owner());
-        // console.log("ProxyFee WETH: ", proxyFee.WETH());
-        // console.log("ProxyFee feeReceiver: ", proxyFee.getFeeReceiver());
-        // console.log("ProxyFee targetRouter: ", proxyFee.getTargetRouter());
+        console.log("owner: ", owner);
+        console.log("feeReceiver: ", feeReceiver);
 
         vm.stopBroadcast();
     }
