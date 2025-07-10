@@ -3,7 +3,7 @@ pragma solidity ^0.8.27;
 
 /* ====== EXTERNAL IMPORTS ====== */
 import {Ownable} from "@openzeppelin/access/Ownable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {ReentrancyGuard} from "@openzeppelin/utils/ReentrancyGuard.sol";
 
 /* ====== INTERFACES IMPORTS ====== */
 import {IERC20} from "@openzeppelin/token/ERC20/IERC20.sol";
